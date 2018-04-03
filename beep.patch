@@ -72,7 +72,7 @@
  }
  
  
-@@ -328,6 +303,26 @@
+@@ -328,6 +303,28 @@
    signal(SIGTERM, handle_signal);
    parse_command_line(argc, argv, parms);
  
@@ -84,9 +84,11 @@
 +      console_fd = open("/dev/vc/0", O_WRONLY);
 +
 +  if(console_fd == -1) {
++    int errnum = errno; /* Preserve errno before calling printf */
 +    fprintf(stderr, "Could not open %s for writing\n",
 +      console_device != NULL ? console_device : "/dev/tty0 or /dev/vc/0");
 +    printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
++    errno = errnum;
 +    perror("open");
 +    exit(1);
 +  }
@@ -99,7 +101,7 @@
    /* this outermost while loop handles the possibility that -n/--new has been
       used, i.e. that we have multiple beeps specified. Each iteration will
       play, then free() one parms instance. */
-@@ -365,8 +360,8 @@
+@@ -365,8 +362,8 @@
      parms = next;
    }
  
