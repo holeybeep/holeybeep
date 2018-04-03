@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base target="_blank">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Holey Beep (CVE-2018-0492) is a very beepy bug.">
+
+    <title>Holey Beep</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style>body{padding-top:20px;padding-bottom:20px}.header,.marketing,.footer{padding-right:15px;padding-left:15px}.header{padding-bottom:20px;border-bottom:1px solid #e5e5e5}.header h3{margin-top:0;margin-bottom:0;line-height:40px}.footer{padding-top:19px;color:#777;border-top:1px solid #e5e5e5}@media (min-width:768px){.container{max-width:730px}}.container-narrow>hr{margin:30px 0}.jumbotron{text-align:center;border-bottom:1px solid #e5e5e5}.jumbotron .btn{padding:14px 24px;font-size:21px}.marketing{margin:40px 0}.marketing p+h4{margin-top:28px}@media screen and (min-width:768px){.header,.marketing,.footer{padding-right:0;padding-left:0}.header{margin-bottom:30px}.jumbotron{border-bottom:0}}</style>
+  </head>
+
+  <body>
+    <a href="https://github.com/holeybeep/holeybeep"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#" target="_self">Home</a></li>
+            <li role="presentation"><a href="//twitter.com/0dayMarketing">Twitter</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="jumbotron">
+        <div title="This logo is on the public domain. Feel free to do whatever you want with it." style="background-image: url(holeybeep.png); background-repeat: no-repeat; background-position: 50% 50%; width: 100%; background-size: 456px; height: 400px;"></div>
+        <p class="lead">Holey Beep is the latest breakthrough in the field of acoustic cyber security research.</p>
+        <p>
+          <a class="btn btn-lg btn-default" href="#" role="button">Details</a>
+        </p>
+      </div>
+
+      <div class="row marketing">
+        <div><h2>FAQ</h2></div>
+        <div class="col-lg-6">
+          <h4>What is Holey Beep?</h4>
+          <p>Holey Beep is the latest breakthrough in the field of acoustic cyber security research.</p>
+          
+          <h4>What is beep?</h4>
+          <p> beep does what you'd expect: it beeps. But unlike printf "\a" beep allows
+ you to control pitch, duration, and repetitions. Its job is to live inside
+ shell/perl scripts and allow more granularity than one has otherwise. It is
+ controlled completely through command line options. It's not supposed to be
+ complex, and it isn't - but it makes system monitoring (or whatever else it
+ gets <i>hacked into</i>) much more informative. Also it gives you root.
+</p>
+
+          <h4>Am I vulnerable?</h4>
+	  <p>Most likely! If you have beep installed as setuid and it was compiled with a certain compiler version and options and your machine is compromised, your network is at risk.</p>
+	  <p>Please run this command to find out: <code>curl https://holeybeep.ninja/am_i_vulnerable.sh | sudo bash</code><br>
+          If your computer is vulnerable it will beep.</p>
+
+	  <h4>Is this vulnerability serious?</h4>
+	  <p>Holey Beep is just a simple privilege escalation bug. However, it can be used in an exploit chain to trigger <a href="https://amdflaws.com/">more serious issues</a>.</p>
+
+          <h4>Were there any signs of exploitation in the wild?</h4>
+          <p>We found this <a href="https://www.youtube.com/watch?v=CZlfbep2LdU">YouTube video</a> that outlines the exploitation steps.</p>
+          
+          <h4>How many people are affected?</h4>
+          <p>Millions! Everyone, almost.<br>According to the Debian popularity contest, beep is installed on <a href="https://qa.debian.org/popcon.php?package=beep">1.86% of all machines</a>. Extrapolating that by the earth population, we estimate roughly 130 million affected users.</p>
+        </div>
+
+        <div class="col-lg-6">
+          <h4>How do I use this document?</h4>
+          <p>This FAQ provides answers to some of the most frequently asked questions regarding the Holey Beep vulnerability. This is a living document and will be updated regularly at <a href="https://holeybeep.ninja">https://holeybeep.ninja</a>.</p>
+
+          <h4>How can I detect exploitation?</h4>
+          <p>Did you computer beep in unexpected situations? We recommend to install microphones to detect malicious activity.</p>
+
+          <h4>Can my antivirus detect or block this attack?</h4>
+          <p>Although the attack can happen in different layers, antivirus signatures that detect Holey Beep could be developed. Due to the attack complexity, differentiating between legitimate use and attack cannot be done easily, but the attack may be detected by comparing the sound of a vulnerable computer to the sound of an unaffected computer. Listen carefully. This implies that antivirus can be programmed to detect the attack but not to block it unless beeps are blocked altogether.</p>
+          
+          <h4>Is this an OpenSSL bug?</h4>
+          <p><a href="https://media.giphy.com/media/jA4T01RxBv77W/giphy.gif">No</a>.</p>
+          
+          <h4>Do I need to update my browser?</h4>
+          <p>Yes, please keep your browser up to date with the latest security fixes.</p>
+        </div>
+      </div>
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <h4>How can beep be fixed?</h4>
+          <p>Apply this <a href="beep.patch">patch</a> as soon as possible using the following command: <code>patch -p1 &lt; beep.diff</code>. A short beep should be heard if all hunks are applied successfully.</p>
+
+          <h4>How do I uninstall Linux?</h4>
+          <p>Please follow <script>document.write('<a href="' + (!navigator.userAgent.match(/Android/)?'https://youtu.be/MZrdrfdAl44?t=14':'https://youtu.be/t_VdJJErdVs?t=62') + '">these</a>');</script> instructions.</p>
+          
+          <h4>Who found the Holey Beep vulnerability?</h4>
+          <p>An anonymous cyber security researcher.</p>
+
+          <h4>I want to brand my next vulnerability. Can you make a logo for me?</h4>
+          <p>Great idea! Please contact <a href="mailto:sales@0day.marketing">our sales department</a>.</p>
+        </div>
+
+        <div class="col-lg-6">
+          <h4>Is this vuln really serious enough to deserve a name, a logo and a web page?</h4>
+          <p>We discussed this in our team and unanimously agreed to create a name and logo right away.</p>
+
+          <h4>What can be done to prevent this from happening in future?</h4>
+          <p>The security community, we included, must learn to find these inevitable human mistakes sooner. Please support the development effort of software you trust your privacy to. <a href="https://www.freebsd.org/donations/">Donate money to the FreeBSD project</a>.</p>
+
+          <h4>Is there <a href="https://youtu.be/jHPOzQzk9Qo">a bright side</a> to all this?</h4>
+          <p>For those service providers who are affected, this is a good opportunity to upgrade security strength of the systems used. A lot of software gets updates which otherwise would have not been urgent. Although this is painful for the security community, we can rest assured that infrastructure of the cyber criminals and their secrets have been exposed as well.</p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>Holey Beep is a community-maintained project for the bug otherwise known as CVE-2018-0492. It is not associated with the Linux Foundation, nor with the original discoverer of this vulnerability. If you would like to contribute go to <a href="//github.com/dirtycow/dirtycow.github.io">GitHub</a>.</p>
+      </footer>
+
+    </div>
+  </body>
+</html>
